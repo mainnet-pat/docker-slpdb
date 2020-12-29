@@ -17,7 +17,7 @@ services:
 
   slpdb:
     build: .
-    #image: christroutner/slpdb-mainnet_slpdb:0.15.5
+    image: mainnet/slpdb:0.15.5
     container_name: slpdb
     volumes:
       # - leveldb-data:/home/safeuser/SLPDB/_leveldb
@@ -28,10 +28,20 @@ services:
 
   slpserve:
     build: ./slpserve/
-    #image: christroutner/slpdb-mainnet_slpserve:0.15.5
+    image: mainnet/slpserve:0.15.5
     container_name: slpserve
     ports:
       - "12300:4000"
+    restart: always
+    networks:
+      - bitcoin
+
+  slpsockserve:
+    build: ./slpsockserve/
+    image: mainnet/slpsockserve:0.15.5
+    container_name: slpsockserve
+    ports:
+      - "12301:4001"
     restart: always
     networks:
       - bitcoin
