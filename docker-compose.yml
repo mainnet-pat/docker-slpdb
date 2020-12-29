@@ -1,34 +1,63 @@
-mongodb:
-  image: mongo:4.4.2-bionic
-  #image: mongo:4.2-bionic
-  #image: mongo:4.0
-  container_name: mongo-slpdb
-  ports:
-    - "12301:27017"
-  volumes:
-    - ../data/mongodb:/data/db
-  command: mongod --logpath=/dev/null # -- quiet
-  restart: always
+version: "3.7"
 
-slpdb:
-  build: .
-  dockerfile: Dockerfile
-  #image: christroutner/slpdb-mainnet_slpdb:0.15.5
-  container_name: slpdb
-  links:
-    - mongodb
-  volumes:
-    - ../data/leveldb:/home/safeuser/SLPDB/_leveldb
-    - ../config:/home/safeuser/config
-  restart: always
+services:
+  mongodb:
+    image: mongo:4.4.2-bionic
+    #image: mongo:4.2-bionic
+    #image: mongo:4.0
+    container_name: mongo-slpdb
+    # ports:
+    #   - "12301:27017"
+    volumes:
+      - mongo-data:/data/db
+    command: mongod --logpath=/dev/null # -- quiet
+    restart: always
+    networks:
+      - bitcoin
 
-slpserve:
-  build: ./slpserve/
-  dockerfile: Dockerfile
-  #image: christroutner/slpdb-mainnet_slpserve:0.15.5
-  container_name: slpserve
-  links:
-    - mongodb
-  ports:
-    - "12300:4000"
-  restart: always
+  slpdb:
+    build: .
+    #image: christroutner/slpdb-mainnet_slpdb:0.15.5
+    container_name: slpdb
+    volumes:
+      # - leveldb-data:/home/safeuser/SLPDB/_leveldb
+      - ./run-script.sh:/home/safeuser/config/run-script.sh
+    restart: always
+    networks:
+      - bitcoin
+
+  slpserve:
+    build: ./slpserve/
+    #image: christroutner/slpdb-mainnet_slpserve:0.15.5
+    container_name: slpserve
+    ports:
+      - "12300:4000"
+    restart: always
+    networks:
+      - bitcoin
+
+  bitcoind:
+    image: zquestz/bitcoin-cash-node
+    command: bitcoind -txindex=1 -regtest -rpcbind=bitcoind -rpcallowip=0.0.0.0/24 -rpcuser=alice -rpcpassword=password
+    healthcheck:
+      test: ["CMD", "/entrypoint.sh", "bitcoin-cli", "getblockchaininfo"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    container_name: bitcoind
+    ports:
+      - "18443:18443"
+    expose: [18443]
+    volumes:
+      - bitcoin-data:/data
+    networks:
+      - bitcoin
+
+networks:
+  bitcoin:
+
+volumes:
+  bitcoin-data:
+  mongo-data:
+  leveldb-data:
