@@ -17,7 +17,7 @@ services:
 
   slpdb:
     build: .
-    image: mainnet/slpdb:0.15.5
+    image: mainnet/slpdb:latest
     container_name: slpdb
     volumes:
       # - leveldb-data:/home/safeuser/SLPDB/_leveldb
@@ -28,7 +28,7 @@ services:
 
   slpserve:
     build: ./slpserve/
-    image: mainnet/slpserve:0.15.5
+    image: mainnet/slpserve:latest
     container_name: slpserve
     ports:
       - "12300:4000"
@@ -38,7 +38,7 @@ services:
 
   slpsockserve:
     build: ./slpsockserve/
-    image: mainnet/slpsockserve:0.15.5
+    image: mainnet/slpsockserve:latest
     container_name: slpsockserve
     ports:
       - "12301:4001"
