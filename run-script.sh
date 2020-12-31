@@ -18,14 +18,21 @@ export rpc_pass=password
 
 export zmq_incoming_host=bitcoind
 export zmq_incoming_port=28332
+export zmq_outgoing_host=0.0.0.0
+export zmq_outgoing_port=28339
 
 # Turn off graph search
 export enable_graph_search=0
 
+export core_from=215
+export core_from_testnet=215
+export db_name=slpdb
+
 # Turn off ZMQ output port
-export zmq_outgoing_enable=0
+export zmq_outgoing_enable=1
 
 # Set the telemtry name for this node
+export telemetry_enable=false
 export telemetry_advertised_host=mainnet-cash-regtest
 
 npm start
