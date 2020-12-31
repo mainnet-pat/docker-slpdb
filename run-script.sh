@@ -17,7 +17,7 @@ export rpc_user=alice
 export rpc_pass=password
 
 export zmq_incoming_host=bitcoind
-export zmq_incoming_port=8332
+export zmq_incoming_port=28332
 
 # Turn off graph search
 export enable_graph_search=0

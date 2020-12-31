@@ -61,7 +61,7 @@ RUN git checkout bb4a805610b9e4d67c1595b716df36190c75e8b1
 RUN npm install
 
 # Call out the persistant volumes
-VOLUME /home/safeuser/SLPDB/_leveldb
+# VOLUME /home/safeuser/SLPDB/_leveldb
 VOLUME /home/safeuser/config
 
 COPY startup-script.sh startup-script.sh
